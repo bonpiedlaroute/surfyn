@@ -140,10 +140,9 @@ function buildurlparams()
   return true;
 }
 
-// Check if div with id #puppeteer is already on the DOM to
+// Check if div with id #target is already on the DOM to
 // To prevent re-hydratation
-var content = document.querySelector('#main-content');
-var puppeteer = content.querySelector('#puppeteer');
+var puppeteer = document.getElementById('target');
 
 // Reload data only if the ssr has not already load it.
 if (!puppeteer)
@@ -329,12 +328,6 @@ function generate_summary_page(data)
     announces_found.innerHTML += search_city;
     announces_found.innerHTML += " ne correspond à vos critères";
 
-    // Indicator to finish loading
-    var main_content = document.getElementById("main-content");
-    var forPuppeteer = document.createElement("div");
-    forPuppeteer.setAttribute("id", "puppeteer");
-    forPuppeteer.style.visibility = 'hidden';
-    main_content.appendChild(forPuppeteer);
   }
   else
   {
@@ -347,9 +340,11 @@ function generate_summary_page(data)
 
         announces_found.innerHTML += " (" +postalcode+")";
         var main_content = document.getElementById("main-content");
+        var footer = document.getElementsByTagName('footer')[0];
         for(var i = 0; i < data.length; i++)
         {
-            var ad_link = createNode("a");
+
+            var ad_link = createNode("div");
             ad_link.className = "announce_link";
             url_path = "/annonce/";
             url_path += searchType == 1 ? "achat/" : "location/";
@@ -603,7 +598,8 @@ function generate_summary_page(data)
 
             ad_div.appendChild(ad_container_div);
 
-            ad_link.href = url_path + "?" + data[i].ID;
+            ad_link.setAttribute("onclick", "document.location='" + url_path + "?" + data[i].ID + "'") ;
+            ad_link.style.cursor = "pointer";
 
             ad_link.appendChild(ad_div);
 
@@ -614,12 +610,12 @@ function generate_summary_page(data)
             main_content.appendChild(line_div);
         }
 
-        // Indicator to finish loading
-        var forPuppeteer = document.createElement("div");
-        forPuppeteer.setAttribute("id", "puppeteer");
-        forPuppeteer.style.visibility = 'hidden';
-        main_content.appendChild(forPuppeteer);
   }
+  
+  var forPuppeteer = document.createElement("div");
+  forPuppeteer.setAttribute("id", "target");
+  forPuppeteer.style.visibility = 'hidden';
+  main_content.appendChild(forPuppeteer);
 
   var facebook_icon = document.getElementById("facebook-icon");
   facebook_icon.style.color = "white";
